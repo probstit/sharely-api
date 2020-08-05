@@ -10,7 +10,7 @@ export const config = {
 
   mongo: {
     url: process.env.MONGO_URL || "mongodb://localhost:27017",
-    usersDb: "users",
+    dbName: process.env.MONGO_DB_NAME || "sharely",
   },
 
   engine: {

@@ -11,26 +11,22 @@ export function get(users: UserService): express.Router {
   let router = express.Router();
 
   router.post(
-    "/user/register",
+    "/users/register",
     async (
       req: express.Request,
       res: express.Response,
       next: express.NextFunction
     ) => {
       try {
-        // let authentication = await users.register({
-        //   grantType: req.body.grantType,
-        //   clientId: req.body.clientId,
-        //   clientSecret: req.body.clientSecret,
-        //   state: req.body.state,
-
-        //   accountKitCode: req.body.accountKitCode,
-        //   firstname: req.body.firstname,
-        //   lastname: req.body.lastname,
-        // });
+        await users.register({
+          email: req.body.email,
+          password: req.body.password,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+        });
         // res.json(authentication);
 
-        res.end();
+        res.end("ok");
       } catch (err) {
         next(err);
       }

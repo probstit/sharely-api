@@ -19,6 +19,7 @@ import { get as UserServiceFactory } from "./domain/users";
 import { get as ApiGatewayFactory, ApiGateway } from "./gateway";
 import { config } from "./config";
 import { UserService } from "./domain/users/service";
+import { initErrors } from "./application/errors";
 
 /**
  * Class representing the application object.
@@ -39,7 +40,8 @@ export class Sharely {
   constructor() {
     // initialize error subsystem
     // EPollErrors();
-    setLocale("ro");
+    initErrors();
+    setLocale("en");
   }
 
   /**
@@ -75,7 +77,7 @@ export class Sharely {
    * Initialize the user service.
    */
   private async _initUsers(mongoClient: MongoClient) {
-    const db = mongoClient.db(config.mongo.usersDb);
+    const db = mongoClient.db(config.mongo.dbName);
     return UserServiceFactory(db);
   }
 
