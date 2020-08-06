@@ -18,7 +18,10 @@ export class UserService {
   /**
    * Class constructor.
    */
-  constructor(private _userRepo: MongoRepository<IUser>) {}
+  constructor(
+    private _userRepo: MongoRepository<IUser>,
+    private _jwtSecret: string
+  ) {}
 
   /**
    * Register a new user account.
@@ -33,5 +36,36 @@ export class UserService {
     }
 
     await this._userRepo.add(user);
+  }
+
+  /**
+   * Login a user account.
+   */
+  async login(params: { email: string; password: string }) {
+    const found = await this._userRepo.find({
+      email: params.email.trim().toLowerCase(),
+    });
+    if (found.length === 0) {
+      throw new Error("no account with this email found");
+    }
+
+    const user = new User(found[0]);
+    if (!user.doesPasswordMatch(params.password)) {
+      throw new Error("wrong password");
+    }
+
+    return this.authenticate(user);
+  }
+
+  authenticate(user: User) {
+    return {
+      jwt: user.generateJwt(this._jwtSecret),
+      user: {
+        _id: user._id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+      },
+    };
   }
 }

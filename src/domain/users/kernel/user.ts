@@ -1,5 +1,6 @@
 import { ObjectID } from "mongodb";
 import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 
 export interface IUser {
   _id: ObjectID;
@@ -37,6 +38,22 @@ export class User implements IUser {
       password: bcrypt.hashSync(params.password, 12),
       firstname: User._formatName(params.firstname),
       lastname: User._formatName(params.lastname),
+    });
+  }
+
+  /**
+   * Check if a password matches the stored one.
+   */
+  doesPasswordMatch(pwd: string) {
+    return bcrypt.compareSync(pwd, this.password);
+  }
+
+  /**
+   * Generate a signed JWT for the user.
+   */
+  generateJwt(secret: string) {
+    return jwt.sign({ _id: this._id.toString() }, secret, {
+      expiresIn: "30d",
     });
   }
 

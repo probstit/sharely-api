@@ -33,5 +33,24 @@ export function get(users: UserService): express.Router {
     }
   );
 
+  router.post(
+    "/users/login",
+    async (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction
+    ) => {
+      try {
+        const authentication = await users.login({
+          email: req.body.email,
+          password: req.body.password,
+        });
+        res.json({ result: authentication });
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+
   return router;
 }

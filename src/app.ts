@@ -78,7 +78,7 @@ export class Sharely {
    */
   private async _initUsers(mongoClient: MongoClient) {
     const db = mongoClient.db(config.mongo.dbName);
-    return UserServiceFactory(db);
+    return UserServiceFactory(db, config.jwtSecret);
   }
 
   /**

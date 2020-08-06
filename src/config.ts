@@ -16,4 +16,5 @@ export const config = {
   engine: {
     version: process.env.ENGINE_VERSION ?? "1.0.0",
   },
+  jwtSecret: process.env.JWT_SECRET ?? "",
 };
