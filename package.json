@@ -31,6 +31,7 @@
     "@types/mocha": "^8.0.2",
     "@types/mongodb": "^3.5.25",
     "@types/morgan": "^1.9.1",
+    "@types/nodemailer": "^6.4.0",
     "@types/semver": "^7.3.1",
     "chai": "^4.2.0",
     "mocha": "^8.1.1",
@@ -53,6 +54,7 @@
     "moment": "^2.27.0",
     "mongodb": "^3.6.0",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.4.11",
     "semver": "^7.3.2"
   }
 }

@@ -20,6 +20,7 @@ import { get as ApiGatewayFactory, ApiGateway } from "./gateway";
 import { config } from "./config";
 import { UserService } from "./domain/users/service";
 import { initErrors } from "./application/errors";
+import { IMailer, DevMailer } from "./util/mailer";
 
 /**
  * Class representing the application object.
@@ -54,8 +55,14 @@ export class Sharely {
       useUnifiedTopology: true,
     });
 
+    // init mailer
+    const mailer: IMailer = new DevMailer(
+      config.mailer.smtp.user,
+      config.mailer.smtp.pass
+    );
+
     // init services
-    this.userService = await this._initUsers(this._mongoClient);
+    this.userService = await this._initUsers(this._mongoClient, mailer);
 
     // init api gateway
     await this._initGateway(this.userService);
@@ -76,9 +83,9 @@ export class Sharely {
   /**
    * Initialize the user service.
    */
-  private async _initUsers(mongoClient: MongoClient) {
+  private async _initUsers(mongoClient: MongoClient, mailer: IMailer) {
     const db = mongoClient.db(config.mongo.dbName);
-    return UserServiceFactory(db, config.jwtSecret);
+    return UserServiceFactory(db, config.jwtSecret, mailer);
   }
 
   /**

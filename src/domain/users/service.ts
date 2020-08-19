@@ -4,6 +4,8 @@
 
 import { MongoRepository } from "../../util/storage/mongoRepository";
 import { IUser, User } from "./kernel/user";
+import { IMailer } from "../../util/mailer";
+import { Logger } from "../../util/process/logger";
 
 // types
 
@@ -20,7 +22,8 @@ export class UserService {
    */
   constructor(
     private _userRepo: MongoRepository<IUser>,
-    private _jwtSecret: string
+    private _jwtSecret: string,
+    private _mailer: IMailer
   ) {}
 
   /**
@@ -36,6 +39,18 @@ export class UserService {
     }
 
     await this._userRepo.add(user);
+    Logger.get().write("user account saved to DB");
+
+    // send confirmation email
+    await this._mailer.send({
+      from: "contact@sharely.ro",
+      to: user.email,
+      subject: "Confirm your email account",
+      html: "One step closer to registering your account. Click the link below",
+    });
+    Logger.get().write("confirmation email sent");
+
+    Logger.get().write("new user account registered");
   }
 
   /**
