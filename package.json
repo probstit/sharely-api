@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npx mocha -r ts-node/register src/**/*.test.ts",
     "build": "npx tsc -p ./tsconfig.json",
-    "build:watch": "npx tsc -p ./tsconfig.json --w"
+    "build:watch": "npx tsc -p ./tsconfig.json --w",
+    "mongo": "mongod --dbpath ./mongo"
   },
   "repository": {
     "type": "git",
