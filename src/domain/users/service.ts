@@ -1,11 +1,13 @@
 // import { ObjectID, Collection } from "mongodb";
 // import { context } from "exceptional.js";
 // import {USER_NAMESPACE} from 'epoll-errors';
+const urljoin = require("url-join");
 
 import { MongoRepository } from "../../util/storage/mongoRepository";
 import { IUser, User } from "./kernel/user";
 import { IMailer } from "../../util/mailer";
 import { Logger } from "../../util/process/logger";
+import { ITempToken, TempToken } from "./kernel/tempToken";
 
 // types
 
@@ -22,8 +24,10 @@ export class UserService {
    */
   constructor(
     private _userRepo: MongoRepository<IUser>,
+    private _tempTokenRepo: MongoRepository<ITempToken>,
+    private _mailer: IMailer,
     private _jwtSecret: string,
-    private _mailer: IMailer
+    private _frontendHostname: string
   ) {}
 
   /**
@@ -41,12 +45,23 @@ export class UserService {
     await this._userRepo.add(user);
     Logger.get().write("user account saved to DB");
 
+    // create temp token used for activation
+    const tempToken = TempToken.create(user._id);
+    await this._tempTokenRepo.add(tempToken);
+    Logger.get().write("temp token saved to DB");
+
+    const activateUrl = urljoin(
+      this._frontendHostname,
+      "activate",
+      tempToken._id.toString()
+    );
+
     // send confirmation email
     await this._mailer.send({
       from: "contact@sharely.ro",
       to: user.email,
       subject: "Confirm your email account",
-      html: "One step closer to registering your account. Click the link below",
+      html: `One step closer to registering your account. Click the link below\n\n${activateUrl}`,
     });
     Logger.get().write("confirmation email sent");
 

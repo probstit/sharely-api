@@ -55,6 +55,7 @@
     "mongodb": "^3.6.0",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.11",
-    "semver": "^7.3.2"
+    "semver": "^7.3.2",
+    "url-join": "^4.0.1"
   }
 }

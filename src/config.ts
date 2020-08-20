@@ -24,4 +24,8 @@ export const config = {
       pass: process.env.MAILER_SMTP_PASSWORD ?? "",
     },
   },
+
+  frontEnd: {
+    hostname: process.env.FRONTEND_HOSTNAME ?? "http://localhost:9091/",
+  },
 };
